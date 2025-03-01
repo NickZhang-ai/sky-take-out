@@ -6,3 +6,8 @@ sky:
     database: sky_take_out
     username: root
     password: 20030201
+  alioss:
+    endpoint: https://oss-us-west-1.aliyuncs.com
+    access-key-id: LTAI5tFse5AVZgviPuJNW2BN
+    access-key-secret: hbu4HnSmqIQ1YaLXmYBriEmF5cddrQ
+    bucket-name: web-tlias-nick-zhang
