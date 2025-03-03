@@ -11,3 +11,8 @@ sky:
     access-key-id: LTAI5tFse5AVZgviPuJNW2BN
     access-key-secret: hbu4HnSmqIQ1YaLXmYBriEmF5cddrQ
     bucket-name: web-tlias-nick-zhang
+  redis:
+    host: localhost
+    port: 6379
+    password: 20030201
+    database: 10
