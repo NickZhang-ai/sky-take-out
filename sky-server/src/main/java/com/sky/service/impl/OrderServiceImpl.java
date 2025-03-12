@@ -383,6 +383,83 @@ public class OrderServiceImpl implements OrderService {
 
     }
 
+    /**
+     * 取消订单
+     * @param ordersCancelDTO
+     */
+    @Override
+    public void cancel(OrdersCancelDTO ordersCancelDTO) throws Exception {
+        //根据id查询订单
+        Orders ordersDB = orderMapper.getById(ordersCancelDTO.getId());
+
+        //支付状态
+        Integer payStatus = ordersDB.getPayStatus();
+        if(payStatus.equals(Orders.PAID)){
+            String refund = weChatPayUtil.refund(
+                    ordersDB.getNumber(),
+                    ordersDB.getNumber(),
+                    new BigDecimal(0.01),
+                    new BigDecimal(0.01));
+            log.info("申请退款：{}", refund);
+        }
+
+        Orders orders = Orders.builder()
+                .id(ordersCancelDTO.getId())
+                .status(Orders.CANCELLED)
+                .cancelReason(ordersCancelDTO.getCancelReason())
+                .cancelTime(LocalDateTime.now())
+                .build();
+
+        orderMapper.update(orders);
+
+    }
+
+    /**
+     * 派送订单
+     * @param id
+     */
+    @Override
+    public void delivery(Long id) {
+        //根据id查询订单
+        Orders ordersDB = orderMapper.getById(id);
+
+        //校验订单是否存在，并且状态为3
+        if(!ordersDB.getStatus().equals(Orders.CONFIRMED)||ordersDB == null){
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+
+        //更新订单状态,状态转为派送中
+        Orders orders = Orders.builder()
+                .id(ordersDB.getId())
+                .status(Orders.DELIVERY_IN_PROGRESS)
+                .build();
+
+        orderMapper.update(orders);
+    }
+
+    /**
+     * 完成订单
+     * @param id
+     */
+    @Override
+    public void complete(Long id) {
+        //根据id查询订单
+        Orders ordersDB = orderMapper.getById(id);
+
+        //校验订单是否存在，并且状态为4
+        if(!ordersDB.getStatus().equals(Orders.DELIVERY_IN_PROGRESS)||ordersDB == null){
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+
+        //更新订单状态,状态转为派送中
+        Orders orders = Orders.builder()
+                .id(ordersDB.getId())
+                .status(Orders.COMPLETED)
+                .build();
+
+        orderMapper.update(orders);
+    }
+
     private List<OrderVO> getOrderVOList(Page<Orders> page) {
         //需要返回订单菜品信息，自定义OrderVO响应结果
         List<OrderVO> orderVOList = new ArrayList<>();
