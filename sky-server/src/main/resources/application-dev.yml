@@ -19,3 +19,7 @@ sky:
   wechat:
     appid: wx9f5341a46dbcf87c
     secret: 6fb0bddc4e8938252ef0a376858a4009
+  shop:
+    address: 武汉市江岸区江大路28号
+  baidu:
+    ak:
