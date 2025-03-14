@@ -364,7 +364,7 @@ public class OrderServiceImpl implements OrderService {
     public void confirm(OrdersConfirmDTO ordersConfirmDTO) {
         Orders orders = Orders.builder()
                 .id(ordersConfirmDTO.getId())
-                .status(Orders.TO_BE_CONFIRMED)
+                .status(Orders.CONFIRMED)
                 .build();
         orderMapper.update(orders);
     }
